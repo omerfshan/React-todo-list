@@ -7,6 +7,7 @@ import Header from "./components/Header";
 import Form from "./components/Form";
 import Filter from "./components/Filter";
 import ShoppingList from "./components/ShoppingList";
+import Noitem from "./components/Noitem";
 
 function App() {
   const [items, setItems] = useState([
@@ -14,37 +15,61 @@ function App() {
     { id: 2, name: "Süt", complete: true },
     { id: 3, name: "Yumurta", complete: false },
   ]);
- 
+  const [filter, setFilter] = useState("all");
+
   const toggleComplete = (id) => {
     const updated = items.map((item) =>
       item.id === id ? { ...item, complete: !item.complete } : item
     );
     setItems(updated);
   };
-  
-  const Additem=(name)=>{
-    const newitem={
-      id:Date.now(),
+
+  const Additem = (name) => {
+    const newitem = {
+      id: Date.now(),
       name,
-      complete:false
+      complete: false,
     };
-    setItems([...items,newitem]);
+    setItems([...items, newitem]);
   };
-  const DeleteItem=(id)=>{
-    const filtered=items.filter(items=>items.id!==id)
+
+  const DeleteItem = (id) => {
+    const filtered = items.filter((item) => item.id !== id);
     setItems(filtered);
   };
+
+  const clearAll = () => {
+    setItems([]);
+  };
+
+  const filteredItems = items.filter((item) => {
+    if (filter === "all") return true;
+    if (filter === "incomplete") return !item.complete;
+    if (filter === "completed") return item.complete;
+    return true;
+  });
+
   return (
     <Router>
       <div className="container">
         <Header />
-        <Form additem={Additem}/>
-        <Filter />
-        <ShoppingList items={items} toggleComplete={toggleComplete} Additem={Additem} DeleteItem={DeleteItem}/>
+        <Form additem={Additem} />
+        {items.length > 0 ? (
+          <>
+            <Filter setFilter={setFilter} filter={filter} clear={clearAll} />
+            <ShoppingList
+              items={filteredItems}
+              toggleComplete={toggleComplete}
+              Additem={Additem}
+              DeleteItem={DeleteItem}
+            />
+          </>
+        ) : (
+         <Noitem/>
+        )}
       </div>
     </Router>
   );
 }
-
 
 export default App;
