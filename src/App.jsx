@@ -14,21 +14,33 @@ function App() {
     { id: 2, name: "Süt", complete: true },
     { id: 3, name: "Yumurta", complete: false },
   ]);
-
+ 
   const toggleComplete = (id) => {
-    const updatedItems = items.map(item =>
+    const updated = items.map((item) =>
       item.id === id ? { ...item, complete: !item.complete } : item
     );
-    setItems(updatedItems);
+    setItems(updated);
   };
-
+  
+  const Additem=(name)=>{
+    const newitem={
+      id:Date.now(),
+      name,
+      complete:false
+    };
+    setItems([...items,newitem]);
+  };
+  const DeleteItem=(id)=>{
+    const filtered=items.filter(items=>items.id!==id)
+    setItems(filtered);
+  };
   return (
     <Router>
       <div className="container">
         <Header />
-        <Form />
+        <Form additem={Additem}/>
         <Filter />
-        <ShoppingList items={items} toggleComplete={toggleComplete} />
+        <ShoppingList items={items} toggleComplete={toggleComplete} Additem={Additem} DeleteItem={DeleteItem}/>
       </div>
     </Router>
   );
