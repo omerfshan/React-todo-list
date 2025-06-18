@@ -7,6 +7,7 @@ import Header from "./components/Header";
 import Form from "./components/Form";
 import Filter from "./components/Filter";
 import ShoppingList from "./components/ShoppingList";
+import Items from "./components/Items";
 import Noitem from "./components/Noitem";
 
 function App() {
@@ -57,15 +58,19 @@ function App() {
         {items.length > 0 ? (
           <>
             <Filter setFilter={setFilter} filter={filter} clear={clearAll} />
-            <ShoppingList
-              items={filteredItems}
-              toggleComplete={toggleComplete}
-              Additem={Additem}
-              DeleteItem={DeleteItem}
-            />
+            <ShoppingList>
+              {filteredItems.map((item) => (
+                <Items
+                  key={item.id}
+                  item={item}
+                  toggleComplete={toggleComplete}
+                  DeleteItem={DeleteItem}
+                />
+              ))}
+            </ShoppingList>
           </>
         ) : (
-         <Noitem/>
+          <Noitem />
         )}
       </div>
     </Router>
